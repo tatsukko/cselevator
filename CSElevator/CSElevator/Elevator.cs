@@ -9,18 +9,21 @@ namespace CSElevator
     {
         private int numOfFloors;
         private int capacity;
-        public int direction;
-        //private int 
+        private int target;
+        private int direction;
         private int position;
         private int posCounter; // used for check whether at a specific floor
         private int waitCounter; // used for waiting at a specific floor
+        private int stopCount;
         private bool[] toStop;
         private Queue<Person>[] passenger;
         public Elevator(int floor)
         {
             numOfFloors = floor;
-            capacity = 0;
+            target = -1;
+            stopCount = 0;
             direction = 0;
+            capacity = 0;
             position = 0;
             posCounter = 0;
             waitCounter = 0;
@@ -41,10 +44,6 @@ namespace CSElevator
         {
             this.position = _p;
         }
-        public void setDirection(int _d)
-        {
-            this.direction = _d;
-        }
         // 当前电梯乘客总量
         private int totalPassenger()
         {
@@ -57,11 +56,12 @@ namespace CSElevator
         }
         public void getWork(ref Floor[] floors)
         {
-            if (posCounter == Program.FLOORTIME || posCounter == 0) // 上下客
+            if (posCounter == Program.FLOORTIME || posCounter == 0) // 电梯停在某一层
             {
                 if (posCounter != 0)
                 {
-                    position += direction;
+                    if (target != position)
+                        position += (target > position ? 1 : -1);
                     posCounter = 0;
                 }
 
@@ -80,52 +80,12 @@ namespace CSElevator
                     else
                     {
                         waitCounter++;
+                        return;
                     }
-                }
-                // 上客
-                if (totalPassenger() == 0) // 乘客下完了
-                {
-                    int curDirection = direction;
-                    direction = 0;
-                    if (curDirection > 0)
-                    {
-                        for (int i = position; i < numOfFloors; i++) { }
-                    }
-                    
-                }
-                if (direction == 0)
-                {
-                    int Dif = numOfFloors + 1;
-                    int target = -1;
-                    for (int i = 0; i < numOfFloors; i++)
-                    {
-                        if ((floors[i].upQueue.Count > 0 && i >= position) 
-                            || (floors[i].downQueue.Count > 0 && i <= position))
-                        {
-                            if (Math.Abs(i - position) < Dif)
-                            {
-                                target = i;
-                                Dif = Math.Abs(i - position);
-                            }
-                        }
-                    }
-                    if (target == position)
-                    {
-                        if (floors[target].upQueue.Count > 0)
-                            direction = 1;
-                        if (floors[target].downQueue.Count > 0)
-                            direction = -1;
-                    }
-                    else if (target > position)
-                    {
-                        direction = 1;
-                    }
-                    else if (target != -1) direction = -1;
-                    else direction = 0;
                 }
 
                 // 上客
-                if (direction == 1)
+                if (target > position) // 电梯继续上行
                 {
                     if (floors[position].upQueue.Count > 0)
                     {
@@ -134,12 +94,14 @@ namespace CSElevator
                             if (floors[position].upQueue.Count > 0)
                             {
                                 Person p = floors[position].upQueue.Dequeue();
+                                target = target > p.targetFloor ? target : p.targetFloor;
                                 passenger[p.targetFloor].Enqueue(p);
                             }
+                            else break;
                         }
                     }
                 }
-                else if(direction == -1)
+                else if ((target < position) && (target != -1)) // 电梯继续下行
                 {
                     if (floors[position].downQueue.Count > 0)
                     {
@@ -148,17 +110,212 @@ namespace CSElevator
                             if (floors[position].downQueue.Count > 0)
                             {
                                 Person p = floors[position].downQueue.Dequeue();
+                                target = target < p.targetFloor ? target : p.targetFloor;
                                 passenger[p.targetFloor].Enqueue(p);
+                            }
+                            else break;
+                        }
+                    }
+                }
+                else if (target == position)
+                {
+                    if (direction == 1) // 电梯原来上行
+                    {
+                        if (floors[position].upQueue.Count > 0) // 本行有乘客需求
+                        {
+                            while (totalPassenger() < capacity)
+                            {
+                                if (floors[position].upQueue.Count > 0)
+                                {
+                                    Person p = floors[position].upQueue.Dequeue();
+                                    target = target > p.targetFloor ? target : p.targetFloor;
+                                    passenger[p.targetFloor].Enqueue(p);
+                                }
+                                else break;
+                            }
+                        }
+                        else // 本行无需求，继续找上行需求
+                        {
+                            for (int i = position; i < numOfFloors; i++)
+                            {
+                                if (floors[i].upQueue.Count > 0 || floors[i].downQueue.Count > 0)
+                                {
+                                    target = i;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if (direction == -1) // 电梯原来下行
+                    {
+                        if (floors[position].downQueue.Count > 0) // 本行有乘客需求
+                        {
+                            while (totalPassenger() < capacity)
+                            {
+                                if (floors[position].downQueue.Count > 0)
+                                {
+                                    Person p = floors[position].downQueue.Dequeue();
+                                    target = target < p.targetFloor ? target : p.targetFloor;
+                                    passenger[p.targetFloor].Enqueue(p);
+                                }
+                                else break;
+                            }
+                        }
+                        else // 本行无需求，继续找下行需求
+                        {
+                            for (int i = position; i >= 0; i--)
+                            {
+                                if (floors[i].upQueue.Count > 0 || floors[i].downQueue.Count > 0)
+                                {
+                                    target = i;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (target == position) // 没有需求
+                    {
+                        target = -1;
+                        direction = 0;
+                        stopCount++;
+                    }
+                }
+                else if (target == -1) // 电梯原来静止
+                {
+                    if (stopCount % 2 == 0)
+                    {
+                        for (int i = position; i < numOfFloors; i++)
+                        {
+                            if (floors[i].upQueue.Count > 0 || floors[i].downQueue.Count > 0)
+                            {
+                                target = i;
+                                direction = 1;
+                                break;
+                            }
+                        }
+                        if (target == -1)
+                        {
+                            for (int i = position; i >= 0; i--)
+                            {
+                                if (floors[i].upQueue.Count > 0 || floors[i].downQueue.Count > 0)
+                                {
+                                    target = i;
+                                    direction = -1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = position; i >= 0; i--)
+                        {
+                            if (floors[i].upQueue.Count > 0 || floors[i].downQueue.Count > 0)
+                            {
+                                target = i;
+                                direction = -1;
+                                break;
+                            }
+                        }
+                        if (target == -1)
+                        {
+                            for (int i = position; i < numOfFloors; i++)
+                            {
+                                if (floors[i].upQueue.Count > 0 || floors[i].downQueue.Count > 0)
+                                {
+                                    target = i;
+                                    direction = 1;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+
             }
-            else
-            {
-                if(direction != 0)
-                    posCounter++;
-            }
+            if (direction != 0)
+                posCounter++;
+            //    // 上客
+            //    if (totalPassenger() == 0) // 乘客下完了
+            //    {
+            //        int curDirection = direction;
+            //        direction = 0;
+            //        if (curDirection > 0)
+            //        {
+            //            for (int i = position; i < numOfFloors; i++) { }
+            //        }
+                    
+            //    }
+            //    if (direction == 0)
+            //    {
+            //        int Dif = numOfFloors + 1;
+            //        int target = -1;
+            //        for (int i = 0; i < numOfFloors; i++)
+            //        {
+            //            if ((floors[i].upQueue.Count > 0 && i >= position) 
+            //                || (floors[i].downQueue.Count > 0 && i <= position))
+            //            {
+            //                if (Math.Abs(i - position) < Dif)
+            //                {
+            //                    target = i;
+            //                    Dif = Math.Abs(i - position);
+            //                }
+            //            }
+            //        }
+            //        if (target == position)
+            //        {
+            //            if (floors[target].upQueue.Count > 0)
+            //                direction = 1;
+            //            if (floors[target].downQueue.Count > 0)
+            //                direction = -1;
+            //        }
+            //        else if (target > position)
+            //        {
+            //            direction = 1;
+            //        }
+            //        else if (target != -1) direction = -1;
+            //        else direction = 0;
+            //    }
+
+            //    // 上客
+            //    if (direction == 1)
+            //    {
+            //        if (floors[position].upQueue.Count > 0)
+            //        {
+            //            while (totalPassenger() < capacity)
+            //            {
+            //                if (floors[position].upQueue.Count > 0)
+            //                {
+            //                    Person p = floors[position].upQueue.Dequeue();
+            //                    passenger[p.targetFloor].Enqueue(p);
+            //                }
+            //            }
+            //        }
+            //    }
+            //    else if(direction == -1)
+            //    {
+            //        if (floors[position].downQueue.Count > 0)
+            //        {
+            //            while (totalPassenger() < capacity)
+            //            {
+            //                if (floors[position].downQueue.Count > 0)
+            //                {
+            //                    Person p = floors[position].downQueue.Dequeue();
+            //                    passenger[p.targetFloor].Enqueue(p);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    if(direction != 0)
+            //        posCounter++;
+            //}
+        }
+        public bool outOfService()
+        {
+            return target == -1;
         }
     }
 }

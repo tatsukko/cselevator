@@ -40,15 +40,15 @@ namespace CSElevator
         {
             Console.WriteLine(ALL.Count);
             Console.ReadLine();
-            //Person[] all = ALL.ToArray();
-            //int[] result = new int[10];
-            //result.Initialize();
-            //for (int i = 0; i < ALL.Count; i++)
-            //{
-            //    result[all[i].targetFloor]++;
-            //}
-            //for (int i = 0; i < 10; i++) Console.WriteLine(result[i]);
-            //Console.ReadLine();
+            Person[] all = ALL.ToArray();
+            int[] result = new int[10];
+            result.Initialize();
+            for (int i = 0; i < ALL.Count; i++)
+            {
+                result[all[i].targetFloor]++;
+            }
+            for (int i = 0; i < 10; i++) Console.WriteLine(result[i]);
+            Console.ReadLine();
             averageWaitingTime = 0;
             averageDuration = 0;
             maximumWaitingTime = 0;

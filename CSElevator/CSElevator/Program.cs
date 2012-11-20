@@ -114,7 +114,7 @@ namespace CSElevator
         {
             for (int i = 0; i < numOfElevator; i++)
             {
-                if (elevators[i].direction != 0) return false;
+                if (!elevators[i].outOfService()) return false;
             }
             for (int i = 0; i < numOfFloors; i++)
             {
