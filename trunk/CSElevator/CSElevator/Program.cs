@@ -31,7 +31,7 @@ namespace CSElevator
             elevators = new Elevator[numOfElevator];
             floors = new Floor[numOfFloors];
             initialize(ref elevators, capacity, numOfElevator, numOfFloors, lamda);
-            emulate(TOTAL);
+            emulate();
             Person.analyze();
             //writeResult();
         }
@@ -54,7 +54,7 @@ namespace CSElevator
                     / numOfElevator));
             }
         }
-        private static void emulate(int TOTAL)
+        private static void emulate()
         {
             double start;
             Random randTarget = new Random(System.DateTime.Now.Millisecond);
