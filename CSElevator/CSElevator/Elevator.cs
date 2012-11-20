@@ -96,6 +96,7 @@ namespace CSElevator
                                 Person p = floors[position].upQueue.Dequeue();
                                 target = target > p.targetFloor ? target : p.targetFloor;
                                 passenger[p.targetFloor].Enqueue(p);
+                                p.getOnboard();
                             }
                             else break;
                         }
@@ -112,6 +113,7 @@ namespace CSElevator
                                 Person p = floors[position].downQueue.Dequeue();
                                 target = target < p.targetFloor ? target : p.targetFloor;
                                 passenger[p.targetFloor].Enqueue(p);
+                                p.getOnboard();
                             }
                             else break;
                         }
@@ -130,6 +132,7 @@ namespace CSElevator
                                     Person p = floors[position].upQueue.Dequeue();
                                     target = target > p.targetFloor ? target : p.targetFloor;
                                     passenger[p.targetFloor].Enqueue(p);
+                                    p.getOnboard();
                                 }
                                 else break;
                             }
@@ -157,6 +160,7 @@ namespace CSElevator
                                     Person p = floors[position].downQueue.Dequeue();
                                     target = target < p.targetFloor ? target : p.targetFloor;
                                     passenger[p.targetFloor].Enqueue(p);
+                                    p.getOnboard();
                                 }
                                 else break;
                             }
