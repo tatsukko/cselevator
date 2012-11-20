@@ -10,8 +10,8 @@ namespace CSElevator
         private int numOfFloors;
         private int capacity;
         private int target;
-        private int direction;
-        private int position;
+        public  int direction;
+        public  int position;
         private int posCounter; // used for check whether at a specific floor
         private int waitCounter; // used for waiting at a specific floor
         private int stopCount;
@@ -45,7 +45,7 @@ namespace CSElevator
             this.position = _p;
         }
         // 当前电梯乘客总量
-        private int totalPassenger()
+        public int totalPassenger()
         {
             int count = 0;
             for (int i = 0; i < numOfFloors; i++)
