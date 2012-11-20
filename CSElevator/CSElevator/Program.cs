@@ -72,7 +72,7 @@ namespace CSElevator
                 Console.Write(string.Format("{0, -8}{1, -3}", "Elevator", i));
             }
             Console.WriteLine("");
-            for (int i = 0; i < numOfFloors; i++)
+            for (int i = numOfFloors - 1; i >= 0; i--)
             {
                 Console.Write(string.Format("{0, -6}{1, -10}", i + 1, floors[i].downQueue.Count + floors[i].upQueue.Count));
                 for (int j = 0; j < numOfElevator; j++)
