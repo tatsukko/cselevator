@@ -9,6 +9,7 @@ namespace CSElevator
     {
         public static int DROPTIME = 4;
         public static int FLOORTIME = 4;
+        public static bool realTime = true;
         static int capacity, numOfElevator, numOfFloors;
         public static int time;
         static double lamda;
@@ -32,12 +33,19 @@ namespace CSElevator
             floors = new Floor[numOfFloors];
             initialize(ref elevators, capacity, numOfElevator, numOfFloors, lamda);
             emulate();
-            Person.analyze();
-            writeResult();
+            printResult();
             Console.ReadLine();
         }
-        private static void writeResult()
+        private static void printResult()
         {
+            Console.Clear();
+            Person.analyze();
+            writeStatistic();
+            writeRealTime();
+        }
+        private static void writeStatistic()
+        {
+            Console.WriteLine("Time: " + time + "s");
             Console.WriteLine("Number of elevator: " + numOfElevator);
             Console.WriteLine("Total passenger: " + TOTAL * numOfFloors);
 
@@ -50,6 +58,36 @@ namespace CSElevator
             Console.WriteLine("Maximum duration: " + (int)Person.maximumDuration + "s");
 
             Console.WriteLine("Average Throughput: " + (int)(((double)TOTAL * numOfFloors) / time * 3600) + " pass/hour");
+        }
+        private static void writeRealTime()
+        {
+            Console.WriteLine("");
+            Console.Write(string.Format("{0, -6}{1, -10}","Floor", "Passenger"));
+            for (int i = 0; i < numOfElevator; i++)
+            {
+                Console.Write(string.Format("{0, -8}{1, -3}", "Elevator", i));
+            }
+            Console.WriteLine("");
+            for (int i = 0; i < numOfFloors; i++)
+            {
+                Console.Write(string.Format("{0, -6}{1, -10}", i + 1, floors[i].downQueue.Count + floors[i].upQueue.Count));
+                for (int j = 0; j < numOfElevator; j++)
+                {
+                    if (elevators[j].position == i)
+                    {
+                        char dir;
+                        if (elevators[j].direction > 0) dir = '^';
+                        else if (elevators[j].direction < 0) dir = 'V';
+                        else dir = '-';
+                        Console.Write(string.Format("{0,-5}{1, 3}   ", "[" + elevators[j].totalPassenger() + "]", dir));
+                    }
+                    else
+                    {
+                        Console.Write(string.Format("{0, -11}", " "));
+                    }
+                }
+                Console.WriteLine("");
+            }
         }
         private static void initialize(ref Elevator[] elevators,
             int capacity, int numOfElevator, int numOfFloors,
@@ -117,6 +155,11 @@ namespace CSElevator
                     elevators[i].getWork(ref floors);
                 }
                 if (bOver(ref ALL)) break;
+                if (realTime)
+                {
+                    System.Threading.Thread.Sleep(200);
+                    printResult();
+                }
             }
         }
         // Judge whether the whole simulation should be stopped
