@@ -32,6 +32,14 @@ namespace CSElevator
             floors = new Floor[numOfFloors];
             initialize(ref elevators, capacity, numOfElevator, numOfFloors, lamda);
             emulate(TOTAL);
+            Person.analyze();
+            //writeResult();
+        }
+        private static void writeResult()
+        {
+            Console.WriteLine("Number of elevator: " + numOfElevator);
+            Console.WriteLine("Total passenger: " + TOTAL);
+            Console.WriteLine("Average waiting time: " + Person.averageWaitingTime);
         }
         private static void initialize(ref Elevator[] elevators,
             int capacity, int numOfElevator, int numOfFloors,
