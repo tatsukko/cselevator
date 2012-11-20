@@ -7,6 +7,8 @@ namespace CSElevator
 {
     class Program
     {
+        public static int DROPTIME = 4;
+        public static int FLOORTIME = 4;
         static int capacity, numOfElevator, numOfFloors;
         public static int time;
         static double lamda;
