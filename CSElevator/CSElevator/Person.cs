@@ -30,17 +30,25 @@ namespace CSElevator
                 floor.downQueue.Enqueue(this);
             }
         }
-        // 乘客出电梯
+        // Passenger out of elevator
         public void dropDown()
         {
             endTime = Program.time;
             ALL.Enqueue(this);
         }
-        // 最终结果分析
         public static void analyze()
         {
             Console.WriteLine(ALL.Count);
             Console.ReadLine();
+            //Person[] all = ALL.ToArray();
+            //int[] result = new int[10];
+            //result.Initialize();
+            //for (int i = 0; i < ALL.Count; i++)
+            //{
+            //    result[all[i].targetFloor]++;
+            //}
+            //for (int i = 0; i < 10; i++) Console.WriteLine(result[i]);
+            //Console.ReadLine();
             averageWaitingTime = 0;
             averageDuration = 0;
             maximumWaitingTime = 0;
