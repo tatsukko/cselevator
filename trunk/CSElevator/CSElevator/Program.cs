@@ -57,7 +57,7 @@ namespace CSElevator
         private static void emulate(int TOTAL)
         {
             double start;
-            Random randTarget = new Random(numOfFloors);
+            Random randTarget = new Random(System.DateTime.Now.Millisecond);
             Queue<Person>[] ALL = new Queue<Person>[numOfFloors];
             // 初始化各楼层的乘客信息
             for (int i = 0; i < numOfFloors; i++)
@@ -87,7 +87,7 @@ namespace CSElevator
                     while (p != null && p.startTime < time)
                     {
                         ALL[i].Dequeue();
-                        int target = 0;
+                        int target = i;
                         // 随机目标楼层
                         while (target == i || target == numOfFloors) target = randTarget.Next(numOfFloors);
                         p.targetFloor = target;
