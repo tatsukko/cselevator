@@ -36,5 +36,21 @@ namespace CSElevator
             endTime = Program.time;
             ALL.Enqueue(this);
         }
+        // 最终结果分析
+        public static void analyze()
+        {
+            Console.WriteLine(ALL.Count);
+            Console.ReadLine();
+            averageWaitingTime = 0;
+            averageDuration = 0;
+            maximumWaitingTime = 0;
+            maximumDuration = 0;
+            minimumWaitingTime = -1;
+            minimumDuration = -1;
+            //for (int i = 0; i < Program.TOTAL; i++)
+            //{
+            //    averageWaitingTime += 
+            //}
+        }
     }
 }
