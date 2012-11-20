@@ -16,6 +16,7 @@ namespace CSElevator
         public static int minimumDuration;
 
         public double startTime;
+        public double boardTime;
         public double endTime;
         public int targetFloor;
 
@@ -35,6 +36,11 @@ namespace CSElevator
         {
             endTime = Program.time;
             ALL.Enqueue(this);
+        }
+        // Passenger get into an elevator
+        public void getOnboard()
+        {
+            boardTime = Program.time;
         }
         public static void analyze()
         {
