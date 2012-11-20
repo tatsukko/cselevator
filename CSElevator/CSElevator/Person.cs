@@ -30,5 +30,11 @@ namespace CSElevator
                 floor.downQueue.Enqueue(this);
             }
         }
+        // 乘客出电梯
+        public void dropDown()
+        {
+            endTime = Program.time;
+            ALL.Enqueue(this);
+        }
     }
 }

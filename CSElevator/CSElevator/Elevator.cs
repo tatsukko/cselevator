@@ -45,8 +45,120 @@ namespace CSElevator
         {
             this.direction = _d;
         }
+        // 当前电梯乘客总量
+        private int totalPassenger()
+        {
+            int count = 0;
+            for (int i = 0; i < numOfFloors; i++)
+            {
+                count += passenger[i].Count;
+            }
+            return count;
+        }
         public void getWork(ref Floor[] floors)
         {
+            if (posCounter == Program.FLOORTIME || posCounter == 0) // 上下客
+            {
+                if (posCounter != 0)
+                {
+                    position += direction;
+                    posCounter = 0;
+                }
+
+                // 下客
+                if (passenger[position].Count > 0)
+                {
+                    if (waitCounter == Program.DROPTIME)
+                    {
+                        while (passenger[position].Count > 0)
+                        {
+                            Person p = passenger[position].Dequeue();
+                            p.dropDown();
+                        }
+                        waitCounter = 0;
+                    }
+                    else
+                    {
+                        waitCounter++;
+                    }
+                }
+                // 上客
+                if (totalPassenger() == 0) // 乘客下完了
+                {
+                    int curDirection = direction;
+                    direction = 0;
+                    if (curDirection > 0)
+                    {
+                        for (int i = position; i < numOfFloors; i++) { }
+                    }
+                    
+                }
+                if (direction == 0)
+                {
+                    int Dif = numOfFloors + 1;
+                    int target = -1;
+                    for (int i = 0; i < numOfFloors; i++)
+                    {
+                        if ((floors[i].upQueue.Count > 0 && i >= position) 
+                            || (floors[i].downQueue.Count > 0 && i <= position))
+                        {
+                            if (Math.Abs(i - position) < Dif)
+                            {
+                                target = i;
+                                Dif = Math.Abs(i - position);
+                            }
+                        }
+                    }
+                    if (target == position)
+                    {
+                        if (floors[target].upQueue.Count > 0)
+                            direction = 1;
+                        if (floors[target].downQueue.Count > 0)
+                            direction = -1;
+                    }
+                    else if (target > position)
+                    {
+                        direction = 1;
+                    }
+                    else if (target != -1) direction = -1;
+                    else direction = 0;
+                }
+
+                // 上客
+                if (direction == 1)
+                {
+                    if (floors[position].upQueue.Count > 0)
+                    {
+                        while (totalPassenger() < capacity)
+                        {
+                            if (floors[position].upQueue.Count > 0)
+                            {
+                                Person p = floors[position].upQueue.Dequeue();
+                                passenger[p.targetFloor].Enqueue(p);
+                            }
+                        }
+                    }
+                }
+                else if(direction == -1)
+                {
+                    if (floors[position].downQueue.Count > 0)
+                    {
+                        while (totalPassenger() < capacity)
+                        {
+                            if (floors[position].downQueue.Count > 0)
+                            {
+                                Person p = floors[position].downQueue.Dequeue();
+                                passenger[p.targetFloor].Enqueue(p);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if(direction != 0)
+                    posCounter++;
+            }
         }
     }
 }
