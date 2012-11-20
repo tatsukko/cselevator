@@ -47,7 +47,7 @@ namespace CSElevator
         {
             Console.WriteLine("Time: " + time + "s");
             Console.WriteLine("Number of elevator: " + numOfElevator);
-            Console.WriteLine("Total passenger: " + TOTAL * numOfFloors);
+            Console.WriteLine("Total passenger: " + Person.finishedCounter);
 
             Console.WriteLine("Average waiting time: " + (int)Person.averageWaitingTime + "s");
             Console.WriteLine("Minimum waiting time: " + (int)Person.minimumWaitingTime + "s");
@@ -57,7 +57,7 @@ namespace CSElevator
             Console.WriteLine("Minimum duration: " + (int)Person.minimumDuration + "s");
             Console.WriteLine("Maximum duration: " + (int)Person.maximumDuration + "s");
 
-            Console.WriteLine("Average Throughput: " + (int)(((double)TOTAL * numOfFloors) / time * 3600) + " pass/hour");
+            Console.WriteLine("Average Throughput: " + (int)(((double)Person.finishedCounter) / time * 3600) + " pass/hour");
         }
         private static void writeRealTime()
         {

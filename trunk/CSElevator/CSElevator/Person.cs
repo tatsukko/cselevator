@@ -72,6 +72,7 @@ namespace CSElevator
             {
                 finishedCounter += ALL.Count;
                 Person[] all = ALL.ToArray();
+                ALL.Clear();
                 for (int i = 0; i < all.Length; i++)
                 {
                     double wTime = all[i].boardTime - all[i].startTime;
