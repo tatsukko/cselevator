@@ -18,7 +18,6 @@ namespace CSElevator
         static void Main(string[] args)
         {
             //testPossion();
-            Person.ALL = new Queue<Person>();
             Console.WriteLine("TOTAL Passengers per floor:");
             TOTAL = int.Parse(Console.ReadLine());
             Console.WriteLine("Capacity of elevator:");

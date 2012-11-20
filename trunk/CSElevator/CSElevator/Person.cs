@@ -8,12 +8,16 @@ namespace CSElevator
     class Person
     {
         public static Queue<Person> ALL;
+        public static int finishedCounter;
+        public static double totalWaitingTime;
         public static double averageWaitingTime;
         public static double maximumWaitingTime;
         public static double minimumWaitingTime;
+
+        public static double totalDuration;
         public static double averageDuration;
         public static double maximumDuration;
-        public static double  minimumDuration;
+        public static double minimumDuration;
 
         public double startTime;
         public double boardTime;
@@ -21,6 +25,23 @@ namespace CSElevator
         public int targetFloor;
         public int startFloor;
 
+        static Person()
+        {
+            ALL = new Queue<Person>();
+            ALL.Clear();
+
+            finishedCounter = 0;
+
+            totalWaitingTime = 0;
+            averageWaitingTime = 0;
+            maximumWaitingTime = 0;
+            minimumWaitingTime = -1;
+
+            totalDuration = 0;
+            averageDuration = 0;
+            maximumDuration = 0;
+            minimumDuration = -1;
+        }
         public void requestElevator(ref Floor floor)
         {
             if (targetFloor > floor.position)
@@ -47,41 +68,28 @@ namespace CSElevator
         // 统计最终结果数据
         public static void analyze()
         {
-            //Console.WriteLine(ALL.Count);
-            //Console.ReadLine();
-            //Person[] all = ALL.ToArray();
-            //int[] result = new int[10];
-            //result.Initialize();
-            //for (int i = 0; i < ALL.Count; i++)
-            //{
-            //    result[all[i].targetFloor]++;
-            //}
-            //for (int i = 0; i < 10; i++) Console.WriteLine(result[i]);
-            //Console.ReadLine();
-            averageWaitingTime = 0;
-            averageDuration = 0;
-            maximumWaitingTime = 0;
-            maximumDuration = 0;
-            minimumWaitingTime = -1;
-            minimumDuration = -1;
-            Person[] all = ALL.ToArray();
-            for (int i = 0; i < all.Length; i++)
+            if (ALL.Count > 0)
             {
-                double wTime = all[i].boardTime - all[i].startTime;
-                double dTime = all[i].endTime - all[i].boardTime;
+                finishedCounter += ALL.Count;
+                Person[] all = ALL.ToArray();
+                for (int i = 0; i < all.Length; i++)
+                {
+                    double wTime = all[i].boardTime - all[i].startTime;
+                    double dTime = all[i].endTime - all[i].boardTime;
 
-                averageWaitingTime += wTime;
-                maximumWaitingTime = maximumWaitingTime > wTime ? maximumWaitingTime : wTime;
-                if (minimumWaitingTime == -1) minimumWaitingTime = wTime;
-                else minimumWaitingTime = minimumWaitingTime < wTime ? minimumWaitingTime : wTime;
+                    totalWaitingTime += wTime;
+                    maximumWaitingTime = maximumWaitingTime > wTime ? maximumWaitingTime : wTime;
+                    if (minimumWaitingTime == -1) minimumWaitingTime = wTime;
+                    else minimumWaitingTime = minimumWaitingTime < wTime ? minimumWaitingTime : wTime;
 
-                averageDuration += dTime;
-                maximumDuration = maximumDuration > dTime ? maximumDuration : dTime;
-                if (minimumDuration == -1) minimumDuration = dTime;
-                else minimumDuration = minimumDuration < dTime ? minimumDuration : dTime;
+                    totalDuration += dTime;
+                    maximumDuration = maximumDuration > dTime ? maximumDuration : dTime;
+                    if (minimumDuration == -1) minimumDuration = dTime;
+                    else minimumDuration = minimumDuration < dTime ? minimumDuration : dTime;
+                }
+                averageWaitingTime = totalWaitingTime / finishedCounter;
+                averageDuration = totalDuration / finishedCounter;
             }
-            averageWaitingTime /= all.Length;
-            averageDuration /= all.Length;
         }
     }
 }
