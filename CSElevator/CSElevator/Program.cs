@@ -34,13 +34,23 @@ namespace CSElevator
             initialize(ref elevators, capacity, numOfElevator, numOfFloors, lamda);
             emulate();
             Person.analyze();
-            //writeResult();
+            writeResult();
+            Console.ReadLine();
         }
         private static void writeResult()
         {
             Console.WriteLine("Number of elevator: " + numOfElevator);
-            Console.WriteLine("Total passenger: " + TOTAL);
-            Console.WriteLine("Average waiting time: " + Person.averageWaitingTime);
+            Console.WriteLine("Total passenger: " + TOTAL * numOfFloors);
+
+            Console.WriteLine("Average waiting time: " + (int)Person.averageWaitingTime + "s");
+            Console.WriteLine("Minimum waiting time: " + (int)Person.minimumWaitingTime + "s");
+            Console.WriteLine("Maximum waiting time: " + (int)Person.maximumWaitingTime + "s");
+
+            Console.WriteLine("Average duration: " + (int)Person.averageDuration + "s");
+            Console.WriteLine("Minimum duration: " + (int)Person.minimumDuration + "s");
+            Console.WriteLine("Maximum duration: " + (int)Person.maximumDuration + "s");
+
+            Console.WriteLine("Average Throughput: " + (int)(((double)TOTAL * numOfFloors) / time * 3600) + " pass/hour");
         }
         private static void initialize(ref Elevator[] elevators,
             int capacity, int numOfElevator, int numOfFloors,
@@ -103,7 +113,6 @@ namespace CSElevator
                 // 不用了，Floor自己完成
 
                 // 触发电梯
-                int temp = 0;
                 for (int i = 0; i < numOfElevator; i++)
                 {
                     elevators[i].getWork(ref floors);

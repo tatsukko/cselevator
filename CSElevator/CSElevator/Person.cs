@@ -8,12 +8,12 @@ namespace CSElevator
     class Person
     {
         public static Queue<Person> ALL;
-        public static int averageWaitingTime;
-        public static int maximumWaitingTime;
-        public static int minimumWaitingTime;
-        public static int averageDuration;
-        public static int maximumDuration;
-        public static int minimumDuration;
+        public static double averageWaitingTime;
+        public static double maximumWaitingTime;
+        public static double minimumWaitingTime;
+        public static double averageDuration;
+        public static double maximumDuration;
+        public static double  minimumDuration;
 
         public double startTime;
         public double boardTime;
@@ -43,10 +43,12 @@ namespace CSElevator
         {
             boardTime = Program.time;
         }
+
+        // 统计最终结果数据
         public static void analyze()
         {
-            Console.WriteLine(ALL.Count);
-            Console.ReadLine();
+            //Console.WriteLine(ALL.Count);
+            //Console.ReadLine();
             //Person[] all = ALL.ToArray();
             //int[] result = new int[10];
             //result.Initialize();
@@ -62,10 +64,24 @@ namespace CSElevator
             maximumDuration = 0;
             minimumWaitingTime = -1;
             minimumDuration = -1;
-            //for (int i = 0; i < Program.TOTAL; i++)
-            //{
-            //    averageWaitingTime += 
-            //}
+            Person[] all = ALL.ToArray();
+            for (int i = 0; i < all.Length; i++)
+            {
+                double wTime = all[i].boardTime - all[i].startTime;
+                double dTime = all[i].endTime - all[i].boardTime;
+
+                averageWaitingTime += wTime;
+                maximumWaitingTime = maximumWaitingTime > wTime ? maximumWaitingTime : wTime;
+                if (minimumWaitingTime == -1) minimumWaitingTime = wTime;
+                else minimumWaitingTime = minimumWaitingTime < wTime ? minimumWaitingTime : wTime;
+
+                averageDuration += dTime;
+                maximumDuration = maximumDuration > dTime ? maximumDuration : dTime;
+                if (minimumDuration == -1) minimumDuration = dTime;
+                else minimumDuration = minimumDuration < dTime ? minimumDuration : dTime;
+            }
+            averageWaitingTime /= all.Length;
+            averageDuration /= all.Length;
         }
     }
 }
