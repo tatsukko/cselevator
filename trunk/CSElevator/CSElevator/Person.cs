@@ -19,6 +19,7 @@ namespace CSElevator
         public double boardTime;
         public double endTime;
         public int targetFloor;
+        public int startFloor;
 
         public void requestElevator(ref Floor floor)
         {

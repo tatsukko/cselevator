@@ -18,8 +18,9 @@ namespace CSElevator
         static void Main(string[] args)
         {
             //testPossion();
-            TOTAL = 50;
             Person.ALL = new Queue<Person>();
+            Console.WriteLine("TOTAL Passengers per floor:");
+            TOTAL = int.Parse(Console.ReadLine());
             Console.WriteLine("Capacity of elevator:");
             capacity = int.Parse(Console.ReadLine());
             Console.WriteLine("Number of elevator(s):");
@@ -70,6 +71,7 @@ namespace CSElevator
                 {
                     start += Possion.exprand(lamda);
                     Person p = new Person();
+                    p.startFloor = i;
                     p.startTime = start;
                     ALL[i].Enqueue(p);
                 }
