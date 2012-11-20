@@ -45,5 +45,8 @@ namespace CSElevator
         {
             this.direction = _d;
         }
+        public void getWork(ref Floor[] floors)
+        {
+        }
     }
 }
