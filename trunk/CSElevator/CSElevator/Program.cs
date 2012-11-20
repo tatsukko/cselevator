@@ -49,7 +49,6 @@ namespace CSElevator
             {
                 elevators[i] = new Elevator(numOfFloors);
                 elevators[i].setCapacity(capacity);
-                elevators[i].setDirection(0);
                 // 电梯初始位置均匀分布在各个楼层
                 elevators[i].setPosition((int)(i * numOfFloors 
                     / numOfElevator));
