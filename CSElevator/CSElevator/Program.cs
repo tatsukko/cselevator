@@ -7,9 +7,10 @@ namespace CSElevator
 {
     class Program
     {
-        public static int DROPTIME = 4;
-        public static int FLOORTIME = 4;
-        public static bool realTime = true;
+        public static int DROPTIME = 6; // 乘客下电梯所耗时间
+        public static int FLOORTIME = 4; // 变化一层所需时间
+        public static int BOARDTIME = 8; // 乘客上电梯所需时间
+        public static bool realTime;
         static int capacity, numOfElevator, numOfFloors;
         public static int time;
         static double lamda;
@@ -19,8 +20,6 @@ namespace CSElevator
         static void Main(string[] args)
         {
             //testPossion();
-            Console.WriteLine("TOTAL Passengers per floor:");
-            TOTAL = int.Parse(Console.ReadLine());
             Console.WriteLine("Capacity of elevator:");
             capacity = int.Parse(Console.ReadLine());
             Console.WriteLine("Number of elevator(s):");
@@ -29,6 +28,11 @@ namespace CSElevator
             numOfFloors = int.Parse(Console.ReadLine());
             Console.WriteLine("Number of passengers per min(Lamda):");
             lamda = double.Parse(Console.ReadLine());
+            Console.WriteLine("\nTOTAL Passengers per floor:");
+            TOTAL = int.Parse(Console.ReadLine());
+            Console.WriteLine("\nFast simulate or realtime-like? 0 for FAST 1 for REALTIME");
+            int tmp = int.Parse(Console.ReadLine());
+            realTime = (tmp == 1);
             elevators = new Elevator[numOfElevator];
             floors = new Floor[numOfFloors];
             initialize(ref elevators, capacity, numOfElevator, numOfFloors, lamda);

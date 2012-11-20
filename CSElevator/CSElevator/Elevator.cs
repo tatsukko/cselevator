@@ -14,6 +14,7 @@ namespace CSElevator
         public  int position;
         private int posCounter; // used for check whether at a specific floor
         private int waitCounter; // used for waiting at a specific floor
+        private int boardCounter; // used for boarding time
         private int stopCount;
         private bool[] toStop;
         private Queue<Person>[] passenger;
@@ -83,7 +84,18 @@ namespace CSElevator
                         return;
                     }
                 }
-
+                if (boardCounter != 0)
+                {
+                    if (boardCounter == Program.BOARDTIME)
+                    {
+                        boardCounter = 0;
+                    }
+                    else
+                    {
+                        boardCounter++;
+                    }
+                    return;
+                }
                 // 上客
                 if (target > position) // 电梯继续上行
                 {
@@ -97,6 +109,7 @@ namespace CSElevator
                                 target = target > p.targetFloor ? target : p.targetFloor;
                                 passenger[p.targetFloor].Enqueue(p);
                                 p.getOnboard();
+                                boardCounter = 1;
                             }
                             else break;
                         }
@@ -114,6 +127,7 @@ namespace CSElevator
                                 target = target < p.targetFloor ? target : p.targetFloor;
                                 passenger[p.targetFloor].Enqueue(p);
                                 p.getOnboard();
+                                boardCounter = 1;
                             }
                             else break;
                         }
@@ -133,6 +147,7 @@ namespace CSElevator
                                     target = target > p.targetFloor ? target : p.targetFloor;
                                     passenger[p.targetFloor].Enqueue(p);
                                     p.getOnboard();
+                                    boardCounter = 1;
                                 }
                                 else break;
                             }
@@ -161,6 +176,7 @@ namespace CSElevator
                                     target = target < p.targetFloor ? target : p.targetFloor;
                                     passenger[p.targetFloor].Enqueue(p);
                                     p.getOnboard();
+                                    boardCounter = 1;
                                 }
                                 else break;
                             }
