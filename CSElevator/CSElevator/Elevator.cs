@@ -16,7 +16,7 @@ namespace CSElevator
         private int waitCounter; // used for waiting at a specific floor
         private int boardCounter; // used for boarding time
         private int stopCount;
-        private bool[] toStop;
+
         private Queue<Person>[] passenger;
         public Elevator(int floor)
         {
@@ -29,12 +29,10 @@ namespace CSElevator
             posCounter = 0;
             waitCounter = 0;
             passenger = new Queue<Person>[floor];
-            toStop = new bool[floor];
             for (int i = 0; i < floor; i++)
             {
                 passenger[i] = new Queue<Person>();
                 passenger[i].Clear();
-                toStop[i] = false;
             }
         }
         public void setCapacity(int _c)
@@ -255,83 +253,6 @@ namespace CSElevator
             }
             if (direction != 0)
                 posCounter++;
-            //    // 上客
-            //    if (totalPassenger() == 0) // 乘客下完了
-            //    {
-            //        int curDirection = direction;
-            //        direction = 0;
-            //        if (curDirection > 0)
-            //        {
-            //            for (int i = position; i < numOfFloors; i++) { }
-            //        }
-                    
-            //    }
-            //    if (direction == 0)
-            //    {
-            //        int Dif = numOfFloors + 1;
-            //        int target = -1;
-            //        for (int i = 0; i < numOfFloors; i++)
-            //        {
-            //            if ((floors[i].upQueue.Count > 0 && i >= position) 
-            //                || (floors[i].downQueue.Count > 0 && i <= position))
-            //            {
-            //                if (Math.Abs(i - position) < Dif)
-            //                {
-            //                    target = i;
-            //                    Dif = Math.Abs(i - position);
-            //                }
-            //            }
-            //        }
-            //        if (target == position)
-            //        {
-            //            if (floors[target].upQueue.Count > 0)
-            //                direction = 1;
-            //            if (floors[target].downQueue.Count > 0)
-            //                direction = -1;
-            //        }
-            //        else if (target > position)
-            //        {
-            //            direction = 1;
-            //        }
-            //        else if (target != -1) direction = -1;
-            //        else direction = 0;
-            //    }
-
-            //    // 上客
-            //    if (direction == 1)
-            //    {
-            //        if (floors[position].upQueue.Count > 0)
-            //        {
-            //            while (totalPassenger() < capacity)
-            //            {
-            //                if (floors[position].upQueue.Count > 0)
-            //                {
-            //                    Person p = floors[position].upQueue.Dequeue();
-            //                    passenger[p.targetFloor].Enqueue(p);
-            //                }
-            //            }
-            //        }
-            //    }
-            //    else if(direction == -1)
-            //    {
-            //        if (floors[position].downQueue.Count > 0)
-            //        {
-            //            while (totalPassenger() < capacity)
-            //            {
-            //                if (floors[position].downQueue.Count > 0)
-            //                {
-            //                    Person p = floors[position].downQueue.Dequeue();
-            //                    passenger[p.targetFloor].Enqueue(p);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    if(direction != 0)
-            //        posCounter++;
-            //}
         }
         public bool outOfService()
         {
